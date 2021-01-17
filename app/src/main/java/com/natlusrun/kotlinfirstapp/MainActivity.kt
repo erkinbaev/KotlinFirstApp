@@ -23,6 +23,9 @@ class MainActivity : AppCompatActivity() {
         operations()
     }
 
+    fun test(){
+        result_tv.setText("test text")
+    }
     @SuppressLint("SetTextI18n")
     fun operations() {
         add_btn.setOnClickListener(View.OnClickListener {
