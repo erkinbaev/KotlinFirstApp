@@ -1,101 +1,81 @@
 package com.natlusrun.kotlinfirstapp
 
-import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.view.*
-import java.math.RoundingMode
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
 
+    private var firstValue = 0
+    private var secondValue = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
         operations()
     }
 
-    fun test(){
-        result_tv.setText("test text")
-    }
-    @SuppressLint("SetTextI18n")
-    fun operations() {
-        add_btn.setOnClickListener(View.OnClickListener {
-            val firstValue: String = first_number.text.toString()
-            val secondValue: String = second_number.text.toString()
-
-            val result = add(firstValue, secondValue)
-
-            result_tv.setText("Result:" + result)
-
-        })
-
-        minus_btn.setOnClickListener(View.OnClickListener {
-
-            val firstValue: String = first_number.text.toString()
-            val secondValue: String = second_number.text.toString()
-            val result = minus(firstValue, secondValue)
-            result_tv.setText("Result:" + result)
-        })
-
-        multiply_btn.setOnClickListener(View.OnClickListener {
-
-            val firstValue: String = first_number.text.toString()
-            val secondValue: String = second_number.text.toString()
-           // inputIsNotEmpty()
-            val result = multiply(firstValue, secondValue)
-            result_tv.setText("Result:" + result)
-        })
-
-        divide_btn.setOnClickListener(View.OnClickListener {
-
-            val firstValue: String = first_number.text.toString()
-            val secondValue: String = second_number.text.toString()
-            val result = divide(firstValue, secondValue)
-            result_tv.setText("Result:" + result)
-        })
+    private fun operations() {
+        add_btn.setOnClickListener(this)
+        minus_btn.setOnClickListener(this)
+        multiply_btn.setOnClickListener(this)
+        divide_btn.setOnClickListener(this)
     }
 
+    private fun getNumber() {
+        firstValue = Integer.parseInt(first_number.text.toString())
+        secondValue = Integer.parseInt(second_number.text.toString())
 
-    fun add(firstValue: String, secondValue: String): Int {
-        val a: Int = Integer.parseInt(firstValue)
-        val b: Int = Integer.parseInt(secondValue)
-
-        val sum: Int = a + b
-        return sum
     }
 
-    fun minus(firstValue: String, secondValue: String): Int {
-        val a: Int = Integer.parseInt(firstValue)
-        val b: Int = Integer.parseInt(secondValue)
-
-        val diff: Int = a - b
-        return diff
+    private fun add(firstValue: Int, secondValue: Int): Int {
+        return firstValue + secondValue
     }
 
-    fun multiply(firstValue: String, secondValue: String): Int {
-        val a: Int = Integer.parseInt(firstValue)
-        val b: Int = Integer.parseInt(secondValue)
-
-        val product: Int = a * b
-        return product
+    private fun minus(firstValue: Int, secondValue: Int): Int {
+        return firstValue - secondValue
     }
 
-    fun divide(firstValue: String, secondValue: String): Int {
-        val a: Int = Integer.parseInt(firstValue)
-        val b: Int = Integer.parseInt(secondValue)
-
-        val reverso: Int = a / b
-        return reverso
+    private fun multiply(firstValue: Int, secondValue: Int): Int {
+        return  firstValue * secondValue
     }
 
+    private fun divide(firstValue: Int, secondValue: Int): Int {
+        return firstValue / secondValue
+    }
 
+    override fun onClick(p0: View?) {
+        if (first_number.text.isNotEmpty() && second_number.text.isNotEmpty()) {
+            when (p0?.id) {
+                R.id.add_btn -> {
+                    getNumber()
+                    setResults(add(firstValue, secondValue))
+                }
+                R.id.minus_btn -> {
+                    getNumber()
+                    setResults(minus(firstValue, secondValue))
+                }
+                R.id.divide_btn -> {
+                    if(second_number.text.isNotEmpty()){
+                        getNumber()
+                        setResults(divide(firstValue, secondValue))
+                    }else{
+                        showToast("На 0 делить нельзя!")
+                    }
+
+                }
+                R.id.multiply_btn -> {
+                    getNumber()
+                    setResults(multiply(firstValue, secondValue))
+                }
+            }
+        } else {
+            showToast("Запаолните все поля пожалуйста!")
+        }
+    }
+
+    private fun setResults(res: Int) {
+        result_tv.text = ("Result:$res")
+    }
 }
